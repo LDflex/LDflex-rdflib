@@ -1,0 +1,42 @@
+{
+  "name": "ldflex-rdflib",
+  "version": "1.0.0",
+  "description": "rdflib.js query engine support for the LDflex language",
+  "author": "Ruben Verborgh <ruben@verborgh.org> (https://ruben.verborgh.org/)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LDflex/LDflex-rdflib"
+  },
+  "main": "lib/index.js",
+  "module": "src/index.js",
+  "sideEffects": false,
+  "files": [
+    "src",
+    "lib"
+  ],
+  "dependencies": {
+    "rdflib": "^1.0.6"
+  },
+  "peerDependencies": {
+    "ldflex": "^2.8.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "eslint": "^6.8.0",
+    "eslint-plugin-jest": "^23.8.0",
+    "husky": "^4.2.3",
+    "jest": "^25.1.0"
+  },
+  "scripts": {
+    "build": "npm run build:lib",
+    "build:lib": "babel src --out-dir lib",
+    "jest": "jest",
+    "lint": "eslint src test",
+    "prepublishOnly": "npm run build",
+    "test": "npm run lint && npm run jest",
+    "test:dev": "npm run jest -- --watch"
+  }
+}
