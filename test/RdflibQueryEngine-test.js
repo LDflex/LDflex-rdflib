@@ -1,7 +1,7 @@
 import RdflibQueryEngine from '../src/RdflibQueryEngine';
 
 import { mockHttp } from './util';
-import { graph } from 'rdflib';
+import { graph, namedNode } from 'rdflib';
 
 jest.mock('rdflib', () => {
   const rdflib = jest.requireActual('rdflib');
@@ -44,14 +44,22 @@ describe('An RdflibQueryEngine instance without default source', () => {
     expect(person).toHaveProperty('size', 2);
     expect(person.has('?subject')).toBe(true);
     expect(person.has('?type')).toBe(true);
-    expect(person.get('?subject').equals({
-      termType: 'NamedNode',
-      value: PROFILE_URL,
-    })).toBe(true);
-    expect(person.get('?type').equals({
-      termType: 'NamedNode',
-      value: 'http://xmlns.com/foaf/0.1/Person',
-    })).toBe(true);
+    expect(person.get('?subject').equals(
+      namedNode(PROFILE_URL))).toBe(true);
+    expect(person.get('?type').equals(
+      namedNode('http://xmlns.com/foaf/0.1/Person'))).toBe(true);
+  });
+
+  it('yields results for a SELECT query with a URL', async () => {
+    const result = engine.execute(SELECT_TYPES, new URL(PROFILE_URL));
+    const items = await readAll(result);
+    expect(items).toHaveLength(9);
+  });
+
+  it('yields results for a SELECT query with a NamedNode', async () => {
+    const result = engine.execute(SELECT_TYPES, namedNode(PROFILE_URL));
+    const items = await readAll(result);
+    expect(items).toHaveLength(9);
   });
 
   it('throws an error when query execution fails', async () => {

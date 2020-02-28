@@ -49,8 +49,14 @@ export default class RdflibQueryEngine {
    * Reads the specified stores into a store.
    */
   async readSources(sourceList, store = graph()) {
-    const sources = await sourceList;
+    let sources = await sourceList;
     if (sources) {
+      // Transform URLs or terms into strings
+      if (sources instanceof URL)
+        sources = sources.href;
+      else if (sources.termType === 'NamedNode')
+        sources = sources.value;
+
       // Read a document from a URL
       if (typeof sources === 'string') {
         const source = sources.replace(/#.*/, '');
