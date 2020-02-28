@@ -49,19 +49,27 @@ export default class RdflibQueryEngine {
    * Reads the specified stores into a store.
    */
   async readSources(sourceList, store = graph()) {
-    let sources = await sourceList;
-    if (sources) {
+    let source = await sourceList;
+    if (source) {
       // Transform URLs or terms into strings
-      if (sources instanceof URL)
-        sources = sources.href;
-      else if (sources.termType === 'NamedNode')
-        sources = sources.value;
+      if (source instanceof URL)
+        source = source.href;
+      else if (source.termType === 'NamedNode')
+        source = source.value;
 
       // Read a document from a URL
-      if (typeof sources === 'string') {
-        const source = sources.replace(/#.*/, '');
+      if (typeof source === 'string') {
+        const document = source.replace(/#.*/, '');
         const fetcher = new Fetcher(store);
-        await fetcher.load(source);
+        await fetcher.load(document);
+      }
+      // Read an array of sources
+      else if (Array.isArray(source)) {
+        await Promise.all(source.map(s => this.readSources(s, store)));
+      }
+      // Error on unsupported sources
+      else {
+        throw new Error(`Unsupported source: ${source}`);
       }
     }
     return store;

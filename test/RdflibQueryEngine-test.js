@@ -16,6 +16,7 @@ const SELECT_TYPES = `
 `;
 
 const PROFILE_URL = 'https://www.w3.org/People/Berners-Lee/card#i';
+const OTHER_PROFILE_URL = 'https://ruben.inrupt.net/profile/card';
 
 describe('An RdflibQueryEngine instance without default source', () => {
   const engine = new RdflibQueryEngine();
@@ -60,6 +61,20 @@ describe('An RdflibQueryEngine instance without default source', () => {
     const result = engine.execute(SELECT_TYPES, namedNode(PROFILE_URL));
     const items = await readAll(result);
     expect(items).toHaveLength(9);
+  });
+
+  it('yields results for a SELECT query with an array', async () => {
+    const sources = [[[PROFILE_URL]], Promise.resolve(OTHER_PROFILE_URL)];
+    const result = engine.execute(SELECT_TYPES, Promise.resolve(sources));
+    const items = await readAll(result);
+    expect(items).toHaveLength(16);
+  });
+
+  it('throws an error with an unsupported source', async () => {
+    const source = { toString: () => 'my source' };
+    const result = engine.execute(SELECT_TYPES, source);
+    await expect(readAll(result)).rejects
+      .toThrow('Unsupported source: my source');
   });
 
   it('throws an error when query execution fails', async () => {
