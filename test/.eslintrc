@@ -1,5 +1,6 @@
 {
   extends: plugin:jest/recommended,
   rules: {
+    max-params: off,
   },
 }
