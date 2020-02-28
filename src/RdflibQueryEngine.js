@@ -1,5 +1,6 @@
 import {
   graph,
+  Fetcher,
   SPARQLToQuery as sparqlToQuery,
 } from 'rdflib';
 
@@ -32,7 +33,9 @@ export default class RdflibQueryEngine {
       store.query(query, result => results.push(result), null,
         error => error ? reject(error) : resolve(results));
     });
-    yield* results;
+    // Convert every result to a map
+    for (const result of results)
+      yield new Map(Object.entries(result));
   }
 
   /**
@@ -45,7 +48,16 @@ export default class RdflibQueryEngine {
   /**
    * Reads the specified stores into a store.
    */
-  async readSources(sources, store = graph()) {
+  async readSources(sourceList, store = graph()) {
+    const sources = await sourceList;
+    if (sources) {
+      // Read a document from a URL
+      if (typeof sources === 'string') {
+        const source = sources.replace(/#.*/, '');
+        const fetcher = new Fetcher(store);
+        await fetcher.load(source);
+      }
+    }
     return store;
   }
 }
