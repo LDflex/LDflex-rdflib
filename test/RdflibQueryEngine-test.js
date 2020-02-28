@@ -169,6 +169,15 @@ describe('An RdflibQueryEngine instance with a default source', () => {
   });
 });
 
+describe('An RdflibQueryEngine instance with a default source that errors', () => {
+  const engine = new RdflibQueryEngine(Promise.reject(new Error('my error')));
+
+  it('throws the error upon execution', async () => {
+    const result = engine.execute(SELECT_TYPES);
+    await expect(readAll(result)).rejects.toThrow('my error');
+  });
+});
+
 async function readAll(asyncIterator) {
   const items = [];
   for await (const item of asyncIterator)

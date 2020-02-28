@@ -12,7 +12,9 @@ export default class RdflibQueryEngine {
    * Creates a query engine with the given sources as default.
    */
   constructor(defaultSources) {
+    // Preload sources but silence errors; they will be thrown during execution
     this._defaultStore = this.readSources(defaultSources);
+    this._defaultStore.catch(() => null);
   }
 
   /**
