@@ -67,6 +67,31 @@ export default class RdflibQueryEngine {
       else if (Array.isArray(source)) {
         await Promise.all(source.map(s => this.readSources(s, store)));
       }
+      // Read an RDF/JS source
+      else if (typeof source.match === 'function') {
+        const results = source.match(null, null, null, null);
+        await new Promise((resolve, reject) => {
+          results.on('data', addQuad);
+          results.on('end', finish);
+          results.on('error', finish);
+          // Adds a quad to the store
+          function addQuad(quad) {
+            try {
+              store.add(quad.subject, quad.predicate, quad.object, quad.graph);
+            }
+            catch (error) {
+              finish(error);
+            }
+          }
+          // Finishes reading the source
+          function finish(error) {
+            results.removeListener('data', addQuad);
+            results.removeListener('end', finish);
+            results.removeListener('error', finish);
+            return error ? reject(error) : resolve(null);
+          }
+        });
+      }
       // Error on unsupported sources
       else {
         throw new Error(`Unsupported source: ${source}`);

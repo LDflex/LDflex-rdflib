@@ -2,6 +2,7 @@ import RdflibQueryEngine from '../src/RdflibQueryEngine';
 
 import { mockHttp } from './util';
 import { graph, namedNode } from 'rdflib';
+import { Readable } from 'stream';
 
 jest.mock('rdflib', () => {
   const rdflib = jest.requireActual('rdflib');
@@ -68,6 +69,60 @@ describe('An RdflibQueryEngine instance without default source', () => {
     const result = engine.execute(SELECT_TYPES, Promise.resolve(sources));
     const items = await readAll(result);
     expect(items).toHaveLength(16);
+  });
+
+  it('yields results for a SELECT query with an RDF/JS source', async () => {
+    // Create source with specific result stream
+    const stream = new Readable({ objectMode: true });
+    stream.push({
+      subject: namedNode(PROFILE_URL),
+      predicate: namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+      object: namedNode('http://xmlns.com/foaf/0.1/Person'),
+    });
+    stream.push({
+      subject: namedNode(PROFILE_URL),
+      predicate: namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+      object: namedNode('http://xmlns.com/foaf/0.1/Agent'),
+    });
+    stream.push({
+      subject: namedNode(PROFILE_URL),
+      predicate: namedNode('http://example.org/#custom'),
+      object: namedNode('http://xmlns.com/foaf/0.1/Agent'),
+    });
+    stream.push(null);
+    const source = { match: jest.fn(() => stream) };
+
+    // Count query results
+    const result = engine.execute(SELECT_TYPES, source);
+    const items = await readAll(result);
+    expect(items).toHaveLength(2);
+
+    // Verify correct usage of source
+    expect(source.match).toHaveBeenCalledTimes(1);
+    expect(source.match).toHaveBeenCalledWith(null, null, null, null);
+  });
+
+  it('errors with an invalid RDF/JS source', async () => {
+    // Create source with specific result stream
+    const stream = new Readable({ objectMode: true });
+    stream.push({});
+    stream.push(null);
+    const source = { match: jest.fn(() => stream) };
+
+    // Verify that an error occurs
+    const result = engine.execute(SELECT_TYPES, source);
+    await expect(readAll(result)).rejects.toThrow();
+  });
+
+  it('errors with an RDF/JS source that errors', async () => {
+    // Create source with specific result stream
+    const stream = new Readable();
+    stream._read = () => stream.emit('error', new Error('my error'));
+    const source = { match: jest.fn(() => stream) };
+
+    // Verify that an error occurs
+    const result = engine.execute(SELECT_TYPES, source);
+    await expect(readAll(result)).rejects.toThrow('my error');
   });
 
   it('throws an error with an unsupported source', async () => {
