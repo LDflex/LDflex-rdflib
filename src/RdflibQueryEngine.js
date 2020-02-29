@@ -21,7 +21,7 @@ export default class RdflibQueryEngine {
    * Creates an asynchronous iterable of results for the given SPARQL query.
    */
   async* execute(sparql, sources) {
-    if ((/^\s*(?:INSERT|UPDATE)/i).test(sparql))
+    if ((/^\s*(?:INSERT|DELETE)/i).test(sparql))
       yield* this.executeUpdate(sparql, sources);
 
     // Parse the SPARQL query

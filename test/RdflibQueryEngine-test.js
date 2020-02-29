@@ -145,16 +145,16 @@ describe('An RdflibQueryEngine instance without default source', () => {
       .toThrow('query failure');
   });
 
-  it('does not support UPDATE queries', async () => {
-    const result = engine.execute('UPDATE xyz');
+  it('does not support INSERT queries', async () => {
+    const result = engine.execute('INSERT DATA { <a> <b> <c> }', PROFILE_URL);
     await expect(readAll(result)).rejects
-      .toThrow('SPARQL UPDATE queries are unsupported, received: UPDATE xyz');
+      .toThrow('SPARQL UPDATE queries are unsupported, received: INSERT DATA { <a> <b> <c> }');
   });
 
-  it('does not support INSERT queries', async () => {
-    const result = engine.execute(' insert xyz');
+  it('does not support DELETE queries', async () => {
+    const result = engine.execute(' delete data { <a> <b> <c> }', PROFILE_URL);
     await expect(readAll(result)).rejects
-      .toThrow('SPARQL UPDATE queries are unsupported, received:  insert xyz');
+      .toThrow('SPARQL UPDATE queries are unsupported, received:  delete data { <a> <b> <c> }');
   });
 });
 
