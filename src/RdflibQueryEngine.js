@@ -101,4 +101,12 @@ export default class RdflibQueryEngine {
     }
     return store;
   }
+
+  /**
+   * Removes the given document (or all, if not specified) from the cache,
+   * such that fresh results are obtained next time.
+   */
+  async clearCache(document) {
+    // No action required, since we need a new fetcher for every store
+  }
 }

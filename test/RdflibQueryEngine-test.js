@@ -156,6 +156,10 @@ describe('An RdflibQueryEngine instance without default source', () => {
     await expect(readAll(result)).rejects
       .toThrow('SPARQL UPDATE queries are unsupported, received:  delete data { <a> <b> <c> }');
   });
+
+  it('clears the cache for a given document', async () => {
+    await expect(engine.clearCache(PROFILE_URL)).resolves.toBeUndefined();
+  });
 });
 
 describe('An RdflibQueryEngine instance with a default source', () => {
