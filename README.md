@@ -1,4 +1,4 @@
-# rdfib.js query support for LDflex
+# rdflib.js query support for LDflex
 This library lets you use
 the built-in SPARQL query engine of
 the [rdflib.js](https://github.com/linkeddata/rdflib.js/)
