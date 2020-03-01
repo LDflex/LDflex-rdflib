@@ -28,6 +28,8 @@ export default class RdflibQueryEngine {
     const query = sparqlToQuery(sparql, true, graph());
     // Load the sources if passed, the default sources otherwise
     const store = await (sources ? this.readSources(sources) : this._defaultStore);
+    // Disable link traversal for now (slow, and unreliable error handling)
+    store.fetcher = null;
 
     // Execute the query and store the results in an array
     const results = [];
