@@ -1,5 +1,5 @@
 {
-  "name": "ldflex-rdflib",
+  "name": "@ldflex/rdflib",
   "version": "1.0.0",
   "description": "rdflib.js query engine support for the LDflex language",
   "author": "Ruben Verborgh <ruben@verborgh.org> (https://ruben.verborgh.org/)",
