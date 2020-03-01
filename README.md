@@ -5,7 +5,7 @@ the [rdflib.js](https://github.com/linkeddata/rdflib.js/)
 with the [LDflex](https://github.com/LDflex/LDflex) language.
 
 [![npm version](https://img.shields.io/npm/v/@ldflex/rdflib.svg)](https://www.npmjs.com/package/@ldflex/rdflib)
-[![Build Status](https://travis-ci.org/LDflex/LDflex-rdflib.svg?branch=master)](https://travis-ci.org/LDflex/LDflex-rdflib)
+[![Build Status](https://travis-ci.com/LDflex/LDflex-rdflib.svg?branch=master)](https://travis-ci.com/LDflex/LDflex-rdflib)
 [![Dependency Status](https://david-dm.org/LDflex/LDflex-rdflib.svg)](https://david-dm.org/LDflex/LDflex-rdflib)
 
 ## Installation
