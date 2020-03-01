@@ -6,6 +6,7 @@ with the [LDflex](https://github.com/LDflex/LDflex) language.
 
 [![npm version](https://img.shields.io/npm/v/@ldflex/rdflib.svg)](https://www.npmjs.com/package/@ldflex/rdflib)
 [![Build Status](https://travis-ci.com/LDflex/LDflex-rdflib.svg?branch=master)](https://travis-ci.com/LDflex/LDflex-rdflib)
+[![Coverage Status](https://coveralls.io/repos/github/LDflex/LDflex-rdflib/badge.svg?branch=master)](https://coveralls.io/github/LDflex/LDflex-rdflib?branch=master)
 [![Dependency Status](https://david-dm.org/LDflex/LDflex-rdflib.svg)](https://david-dm.org/LDflex/LDflex-rdflib)
 
 ## Installation
