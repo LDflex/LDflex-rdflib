@@ -17,6 +17,7 @@ npm install ldflex @ldflex/rdflib
 ```JavaScript
 import { PathFactory } from 'ldflex';
 import RdflibQueryEngine from '@ldflex/rdflib';
+import { namedNode } from 'rdflib';
 
 // The JSON-LD context for resolving properties
 const context = {
@@ -38,7 +39,9 @@ async function showPerson(person) {
     console.log(`- ${name}`);
 }
 
-const ruben = paths.create({ subject: 'https://ruben.verborgh.org/profile/#me' });
+const ruben = paths.create({
+  subject: namedNode('https://ruben.verborgh.org/profile/#me'),
+});
 showPerson(ruben);
 ```
 
