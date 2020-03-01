@@ -35,9 +35,15 @@ export default class RdflibQueryEngine {
       store.query(query, result => results.push(result), null,
         error => error ? reject(error) : resolve(results));
     });
+
     // Convert every result to a map
-    for (const result of results)
-      yield new Map(Object.entries(result));
+    const vars = new Set(query.vars.map(v => `?${v.value}`));
+    for (const result of results) {
+      // Only return explicitly requested variables
+      // (workaround for https://github.com/linkeddata/rdflib.js/issues/393)
+      const bindings = Object.entries(result).filter(([v]) => vars.has(v));
+      yield new Map(bindings);
+    }
   }
 
   /**

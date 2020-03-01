@@ -15,6 +15,11 @@ const SELECT_TYPES = `
     ?subject a ?type.
   }
 `;
+const SELECT_TYPES_ONE_VAR = `
+  SELECT ?type WHERE {
+    ?subject a ?type.
+  }
+`;
 
 const PROFILE_URL = 'https://www.w3.org/People/Berners-Lee/card#i';
 const OTHER_PROFILE_URL = 'https://ruben.inrupt.net/profile/card';
@@ -100,6 +105,20 @@ describe('An RdflibQueryEngine instance without default source', () => {
     // Verify correct usage of source
     expect(source.match).toHaveBeenCalledTimes(1);
     expect(source.match).toHaveBeenCalledWith(null, null, null, null);
+  });
+
+  it('selects only the requested variables', async () => {
+    const result = engine.execute(SELECT_TYPES_ONE_VAR, new URL(PROFILE_URL));
+    const items = await readAll(result);
+    expect(items).toHaveLength(9);
+
+    const person = items[6];
+    expect(person).toBeInstanceOf(Map);
+    expect(person).toHaveProperty('size', 1);
+    expect(person.has('?subject')).toBe(false);
+    expect(person.has('?type')).toBe(true);
+    expect(person.get('?type').equals(
+      namedNode('http://xmlns.com/foaf/0.1/Person'))).toBe(true);
   });
 
   it('errors with an invalid RDF/JS source', async () => {
