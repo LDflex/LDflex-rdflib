@@ -16,7 +16,7 @@
     "lib"
   ],
   "dependencies": {
-    "rdflib": "^1.0.6"
+    "rdflib": "^2.2.0"
   },
   "peerDependencies": {
     "ldflex": "^2.8.0"
