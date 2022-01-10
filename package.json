@@ -31,7 +31,7 @@
     "eslint": "^7.27.0",
     "eslint-plugin-jest": "^24.3.6",
     "husky": "^6.0.0",
-    "jest": "^26.6.3",
+    "jest": "^27.4.7",
     "semantic-release": "^17.4.2",
     "setup-polly-jest": "^0.9.1"
   },
